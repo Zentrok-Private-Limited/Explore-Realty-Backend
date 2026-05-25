@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id String @id @default(cuid())
+
+  slug  String @unique
+  name  String
+  price String
+  img   String
+  type  String
+
+  brochure String?
+  map      String?
+
+  shortDesc   String
+  description String?
+
+  location String
+  config   String
+
+  rera       String?
+  developer  String
+  possession String
+  area       String
+
+  roi String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  builderInfo BuilderInfo?
+  investment  Investment?
+
+  priceDetails       PriceDetail[]
+  floorPlans         FloorPlan[]
+  amenities          Amenity[]
+  highlights         Highlight[]
+  locationAdvantages LocationAdvantage[]
+  nearby             Nearby[]
+  gallery            Gallery[]
+}
+
+model BuilderInfo {
+  id String @id @default(cuid())
+
+  name       String
+  experience String
+
+  projectId String @unique
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Investment {
+  id String @id @default(cuid())
+
+  rental       String
+  appreciation String
+
+  projectId String @unique
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model PriceDetail {
+  id String @id @default(cuid())
+
+  type  String
+  size  String
+  price String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model FloorPlan {
+  id String @id @default(cuid())
+
+  img   String
+  title String
+  size  String
+  floor String
+  price String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id String @id @default(cuid())
+
+  name String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Highlight {
+  id String @id @default(cuid())
+
+  text String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model LocationAdvantage {
+  id String @id @default(cuid())
+
+  title String
+  value String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Nearby {
+  id String @id @default(cuid())
+
+  text String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Gallery {
+  id String @id @default(cuid())
+
+  image String
+
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
