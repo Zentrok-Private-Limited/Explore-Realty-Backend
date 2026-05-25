@@ -4,25 +4,21 @@ import { NextResponse } from "next/server";
 // GET SINGLE PROJECT
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } },
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const project = await prisma.project.findUnique({
-      where: {
-        id: params.id,
-      },
+    const { id } = await context.params;
 
+    const project = await prisma.project.findUnique({
+      where: { id },
       include: {
         builderInfo: true,
         investment: true,
-
         amenities: true,
         highlights: true,
         gallery: true,
-
         floorPlans: true,
         priceDetails: true,
-
         nearby: true,
         locationAdvantages: true,
       },
@@ -30,26 +26,17 @@ export async function GET(
 
     if (!project) {
       return NextResponse.json(
-        {
-          error: "Project not found",
-        },
-        {
-          status: 404,
-        },
+        { error: "Project not found" },
+        { status: 404 }
       );
     }
 
     return NextResponse.json(project);
   } catch (error) {
     console.log(error);
-
     return NextResponse.json(
-      {
-        error: "Failed to fetch project",
-      },
-      {
-        status: 500,
-      },
+      { error: "Failed to fetch project" },
+      { status: 500 }
     );
   }
 }
@@ -57,164 +44,96 @@ export async function GET(
 // UPDATE PROJECT
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } },
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const body = await req.json();
+
     // DELETE OLD RELATIONS
-    await prisma.builderInfo.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.investment.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.amenity.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.highlight.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.gallery.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.floorPlan.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.priceDetail.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.nearby.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
-
-    await prisma.locationAdvantage.deleteMany({
-      where: {
-        projectId: params.id,
-      },
-    });
+    await prisma.builderInfo.deleteMany({ where: { projectId: id } });
+    await prisma.investment.deleteMany({ where: { projectId: id } });
+    await prisma.amenity.deleteMany({ where: { projectId: id } });
+    await prisma.highlight.deleteMany({ where: { projectId: id } });
+    await prisma.gallery.deleteMany({ where: { projectId: id } });
+    await prisma.floorPlan.deleteMany({ where: { projectId: id } });
+    await prisma.priceDetail.deleteMany({ where: { projectId: id } });
+    await prisma.nearby.deleteMany({ where: { projectId: id } });
+    await prisma.locationAdvantage.deleteMany({ where: { projectId: id } });
 
     // UPDATE PROJECT
     const updatedProject = await prisma.project.update({
-      where: {
-        id: params.id,
-      },
-
+      where: { id },
       data: {
         name: body.name,
         slug: body.name
           .toLowerCase()
           .replace(/\s+/g, "-")
           .replace(/[^\w-]+/g, ""),
-
         price: body.price,
         img: body.img,
         type: body.type,
-
         brochure: body.brochure,
         map: body.map,
-
         shortDesc: body.shortDesc,
         description: body.description,
-
         location: body.location,
         config: body.config,
-
         rera: body.rera,
         developer: body.developer,
-
         possession: body.possession,
-
         area: body.area,
-
         roi: body.roi,
-
         builderInfo: {
           create: {
             name: body.builderInfo.name,
-
             experience: body.builderInfo.experience,
           },
         },
-
         investment: {
           create: {
             rental: body.investment.rental,
-
             appreciation: body.investment.appreciation,
           },
         },
-
         amenities: {
           create: body.amenities.map((item: string) => ({
             name: item,
           })),
         },
-
         highlights: {
           create: body.highlights.map((item: string) => ({
             text: item,
           })),
         },
-
         gallery: {
           create: body.gallery.map((item: string) => ({
             image: item,
           })),
         },
-
         nearby: {
           create: body.nearby.map((item: string) => ({
             text: item,
           })),
         },
-
         floorPlans: {
           create: body.floorPlans,
         },
-
         priceDetails: {
           create: body.priceDetails,
         },
-
         locationAdvantages: {
           create: body.locationAdvantages,
         },
       },
-
       include: {
         builderInfo: true,
         investment: true,
-
         amenities: true,
         highlights: true,
         gallery: true,
-
         floorPlans: true,
         priceDetails: true,
-
         nearby: true,
         locationAdvantages: true,
       },
@@ -223,14 +142,9 @@ export async function PUT(
     return NextResponse.json(updatedProject);
   } catch (error) {
     console.log(error);
-
     return NextResponse.json(
-      {
-        error: "Failed to update project",
-      },
-      {
-        status: 500,
-      },
+      { error: "Failed to update project" },
+      { status: 500 }
     );
   }
 }
@@ -238,28 +152,27 @@ export async function PUT(
 // DELETE PROJECT
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } },
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await prisma.project.delete({
-      where: {
-        id: params.id,
-      },
-    });
+    const { id } = await context.params;
 
-    return NextResponse.json({
-      message: "Project deleted successfully",
-    });
+    const existing = await prisma.project.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json(
+        { error: "Project not found" },
+        { status: 404 }
+      );
+    }
+
+    await prisma.project.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Project deleted successfully" });
   } catch (error) {
     console.log(error);
-
     return NextResponse.json(
-      {
-        error: "Failed to delete project",
-      },
-      {
-        status: 500,
-      },
+      { error: "Failed to delete project" },
+      { status: 500 }
     );
   }
 }
