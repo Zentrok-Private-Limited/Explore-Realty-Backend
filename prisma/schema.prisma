@@ -50,8 +50,8 @@ model Project {
 model BuilderInfo {
   id String @id @default(cuid())
 
-  name       String
-  experience String
+  name       String?
+  experience String?
 
   projectId String @unique
 
@@ -61,8 +61,8 @@ model BuilderInfo {
 model Investment {
   id String @id @default(cuid())
 
-  rental       String
-  appreciation String
+  rental       String?
+  appreciation String?
 
   projectId String @unique
 
@@ -118,8 +118,8 @@ model Highlight {
 model LocationAdvantage {
   id String @id @default(cuid())
 
-  title String
-  value String
+  title String?
+  value String?
 
   projectId String
 
@@ -129,7 +129,7 @@ model LocationAdvantage {
 model Nearby {
   id String @id @default(cuid())
 
-  text String
+  text String?
 
   projectId String
 
