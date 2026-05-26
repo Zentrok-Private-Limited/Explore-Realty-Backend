@@ -2,7 +2,7 @@ import ProjectForm from "@/components/ProjectForm";
 
 async function getProject(id: string) {
   const res = await fetch(
-    `http://localhost:3000/api/projects/${id}`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/${id}`,
     {
       cache: "no-store",
     }
