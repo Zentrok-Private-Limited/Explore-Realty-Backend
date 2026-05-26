@@ -26,14 +26,18 @@ export async function GET() {
     return NextResponse.json(projects);
 
   } catch (error) {
+  console.error("FULL ERROR:", error);
 
-    console.log(error);
-
-    return NextResponse.json(
-      { error: "Failed to fetch projects" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : JSON.stringify(error),
+    },
+    { status: 500 }
+  );
+}
 }
 
 export async function POST(req: Request) {
@@ -147,11 +151,16 @@ export async function POST(req: Request) {
 
     return NextResponse.json(project);
   } catch (error) {
-    console.log(error);
+  console.error("FULL ERROR:", error);
 
-    return NextResponse.json(
-      { error: "Failed to create project" },
-      { status: 500 },
-    );
-  }
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : JSON.stringify(error),
+    },
+    { status: 500 }
+  );
+}
 }

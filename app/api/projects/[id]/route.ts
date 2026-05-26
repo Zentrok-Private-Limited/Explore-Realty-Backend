@@ -33,12 +33,18 @@ export async function GET(
 
     return NextResponse.json(project);
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { error: "Failed to fetch project" },
-      { status: 500 }
-    );
-  }
+  console.error("FULL ERROR:", error);
+
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : JSON.stringify(error),
+    },
+    { status: 500 }
+  );
+}
 }
 
 // UPDATE PROJECT
@@ -141,12 +147,18 @@ export async function PUT(
 
     return NextResponse.json(updatedProject);
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { error: "Failed to update project" },
-      { status: 500 }
-    );
-  }
+  console.error("FULL ERROR:", error);
+
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : JSON.stringify(error),
+    },
+    { status: 500 }
+  );
+}
 }
 
 // DELETE PROJECT
@@ -169,10 +181,16 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Project deleted successfully" });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { error: "Failed to delete project" },
-      { status: 500 }
-    );
-  }
+  console.error("FULL ERROR:", error);
+
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : JSON.stringify(error),
+    },
+    { status: 500 }
+  );
+}
 }
