@@ -1,10 +1,14 @@
 async function getProjects() {
   const res = await fetch(
-    "http://localhost:3000/api/projects",
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects`,
     {
       cache: "no-store",
     }
   );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch projects");
+  }
 
   return res.json();
 }
