@@ -33,9 +33,14 @@ export async function GET() {
       },
     });
 
+    console.log("PROJECT DATA:", projects);
+
     return NextResponse.json(projects, {
       headers: corsHeaders,
     });
+
+   
+
   } catch (error) {
     console.error("FULL ERROR:", error);
 
@@ -156,6 +161,8 @@ export async function POST(req: Request) {
         locationAdvantages: true,
       },
     });
+
+    console.log("PROJECT DATA:", project);
 
     return NextResponse.json(project, {
   headers: corsHeaders,
