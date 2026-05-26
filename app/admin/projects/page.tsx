@@ -5,11 +5,17 @@ async function getProjects() {
     cache: "no-store",
   });
 
+
+
   if (!res.ok) {
     throw new Error("Failed to fetch projects");
   }
 
-  return res.json();
+  const data = await res.json();
+
+  console.log(data);
+
+  return data;
 }
 
 export default async function ProjectsPage() {
