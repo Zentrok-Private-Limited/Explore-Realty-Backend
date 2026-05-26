@@ -1,6 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+// HANDLE OPTIONS
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
 // GET ALL PROJECTS
 export async function GET() {
@@ -23,21 +33,19 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(projects);
-
+    return NextResponse.json(projects, {
+      headers: corsHeaders,
+    });
   } catch (error) {
-  console.error("FULL ERROR:", error);
+    console.error("FULL ERROR:", error);
 
-  return NextResponse.json(
-    {
-      error:
-        error instanceof Error
-          ? error.message
-          : JSON.stringify(error),
-    },
-    { status: 500 }
-  );
-}
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : JSON.stringify(error),
+      },
+      { status: 500, headers: corsHeaders },
+    );
+  }
 }
 
 export async function POST(req: Request) {
@@ -149,18 +157,17 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(project);
+    return NextResponse.json(project, {
+  headers: corsHeaders,
+});
   } catch (error) {
-  console.error("FULL ERROR:", error);
+    console.error("FULL ERROR:", error);
 
-  return NextResponse.json(
-    {
-      error:
-        error instanceof Error
-          ? error.message
-          : JSON.stringify(error),
-    },
-    { status: 500 }
-  );
-}
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : JSON.stringify(error),
+      },
+      { status: 500, headers: corsHeaders },
+    );
+  }
 }
