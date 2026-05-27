@@ -1,6 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+// HANDLE OPTIONS
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 // GET SINGLE PROJECT
 export async function GET(
   req: Request,
@@ -31,7 +42,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(project);
+    return NextResponse.json(project, { headers: corsHeaders });
   } catch (error) {
   console.error("FULL ERROR:", error);
 
@@ -145,7 +156,7 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updatedProject);
+    return NextResponse.json(updatedProject, { headers: corsHeaders });
   } catch (error) {
   console.error("FULL ERROR:", error);
 
@@ -179,7 +190,7 @@ export async function DELETE(
 
     await prisma.project.delete({ where: { id } });
 
-    return NextResponse.json({ message: "Project deleted successfully" });
+    return NextResponse.json({ message: "Project deleted successfully" }, { headers: corsHeaders });
   } catch (error) {
   console.error("FULL ERROR:", error);
 

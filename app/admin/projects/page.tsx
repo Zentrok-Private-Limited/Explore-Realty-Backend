@@ -5,8 +5,6 @@ async function getProjects() {
     cache: "no-store",
   });
 
-
-
   if (!res.ok) {
     throw new Error("Failed to fetch projects");
   }
