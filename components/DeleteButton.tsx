@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 
 export default function DeleteButton({
-  id,
+  slug,
 }: {
-  id: string;
+  slug: string;
 }) {
   const router = useRouter();
 
@@ -18,7 +18,7 @@ export default function DeleteButton({
 
     try {
       const res = await fetch(
-        `/api/projects/${id}`,
+        `/api/projects/${slug}`,
         {
           method: "DELETE",
         }

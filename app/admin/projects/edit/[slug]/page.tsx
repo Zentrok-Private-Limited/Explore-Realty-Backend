@@ -1,8 +1,8 @@
 import ProjectForm from "@/components/ProjectForm";
 
-async function getProject(id: string) {
+async function getProject(slug: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/${id}`,
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/projects/${slug}`,
     {
       cache: "no-store",
     }
@@ -14,7 +14,7 @@ async function getProject(id: string) {
 export default async function EditPage({
   params,
 }: any) {
-  const project = await getProject(params.id);
+  const project = await getProject(params.slug);
 
   return (
     <div className="p-10">

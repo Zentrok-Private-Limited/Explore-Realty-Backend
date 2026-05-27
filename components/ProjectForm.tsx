@@ -257,9 +257,9 @@ export default function ProjectForm({ initialData }: any) {
     const method = initialData ? "PUT" : "POST";
 
     const url = initialData
-      ? `/api/projects/${initialData.id}`
-      : "/api/projects";
-
+  ? `/api/projects/${initialData.slug}`
+  : "/api/projects";
+  
     const res = await fetch(url, {
       method,
 

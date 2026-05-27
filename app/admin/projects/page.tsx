@@ -40,7 +40,7 @@ export default async function ProjectsPage() {
                 Edit
               </a>
 
-              <DeleteButton id={project.id} />
+              <DeleteButton slug={project.slug} />
             </div>
           </div>
         ))}
